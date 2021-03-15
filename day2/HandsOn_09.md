@@ -7,7 +7,7 @@ In this Hands-On, we will do a simple database call and output the data.
 1. Open up the `/www/resume.cfm` file in your code editor.
 1. First, replace the list with a call to the database. On line 1, replace the `<cfset>` tag with an open `<cfquery>` tag with the following attributes:
     * **name**: mySkillSet
-    * **datasource**: Learncfinaweek
+    * **datasource**: learncfinaweek
 1. On the next line enter the following SQL code:
 
     ```sql

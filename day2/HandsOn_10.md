@@ -27,7 +27,7 @@ In this Hands-On, we are going to create a more complex query and output that to
         startDate
     ```
 
-1. After the SQL text, add a close `</cfquery>` tag.
+1. After the SQL text, add a closing `</cfquery>` tag.
 1. Your code should look similar to this:
 
     ```cfml
@@ -69,7 +69,7 @@ In this Hands-On, we are going to create a more complex query and output that to
 
 1. Replace the text "Work Experience" with `#myResume.type#`.
 1. After that line, place an opening `<cfoutput>` tag.
-1. Note that we are using the group functionality within ColdFusion; this allows sub loops to be performed inside of a `<cfoutput>`. This is the only time that a `<cfoutput>` tag should be nested inside of another `<cfoutput>` tag.
+1. Note that we are using the group functionality within ColdFusion; this allows sub loops to be performed inside of a `<cfoutput>`. This is the only time that a `<cfoutput>` tag should be nested inside of another `<cfoutput>` tag within one file.
 1. Place a closing `</cfoutput>` tag just before the other `</cfoutput>` closing tag.
 1. Your code should look similar to this:
 
