@@ -14,6 +14,11 @@ In this hands on, you are going to update our code to provide a better user expe
     <cfparam name="form.email" default="">
     <cfparam name="form.message" default="">
     ```
+   > **Note:** ``cfparam`` can be written inside CFScript, too! Like this:
+   > 
+   > ```
+   > param name="form.contactname" default="";
+   > ```  
 
 1. Locate the `contactname` form input on or around line 132 and add a `value` attribute with a value of `#form.contactname#`.
 1. Locate the `email` form input on or around line 136 and add a `value` attribute with the value of `#form.email#`.
@@ -51,7 +56,7 @@ In this hands on, you are going to update our code to provide a better user expe
 1. Your code should look similar to this:
 
     ```cfml
-    <cfif len( trim( form.contactname ) ) eq 0>
+    <cfif len(trim(form.contactname)) eq 0>
     ```
 
 1. Add the `trim` function to the `form.email` and `form.message` `<cfif>` statements.

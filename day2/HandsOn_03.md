@@ -15,8 +15,8 @@ In this hands on, you are going to add some conditional logic to the site as wel
     ```
 
 1. Inside the `<cfif>` tag, place the text `<p>Your form has been submitted</p>`.
-1. Navigate to the `/www/contact.cfm` page in your browser.
-1. Notice that you receive an error stating that 'Element Submitted is undefined in form'. This error is thrown because the `form.submitted` variable does not exist. When dealing with forms, it is important to provide `<cfparam>` tags that will create the variable if it is not already defined.
+1. Navigate to the `/www/contact.cfm` page in your browser. The page now displays an error! We will fix this in the next step.
+1. The error 'Element Submitted is undefined in form' is thrown because the `form.submitted` variable does not exist. When dealing with forms, it is important to provide `<cfparam>` tags that will create the variable if it is not already defined.
 1. Go to line 1 of `contact.cfm` and add the following line of code:
 
     ```cfml

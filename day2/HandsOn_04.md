@@ -7,7 +7,7 @@ In this hands on, you are going to validate the form data that was submitted and
 **Functions Used**: [len](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-functions/functions-l/len.html)
 
 1. Locate the comment that says `Message Output` in the `/www/contact.cfm` file and remove all the code that is inside the `<cfif>` tag just below it.
-1. Inside the `<cfif>` tag create a variable called `OK` and set it to true.
+1. Inside the `<cfif>` tag create a variable called `ok` and set it to true.
 1. Below the `<cfset>`, create a `<cfif>` statement that checks if the length of the value of `form.contactname` is equal to 0. To do that, use a function called `len()` which will return the number of characters in the provided string. Your code should look similar to this:
 
     ```cfml
@@ -18,7 +18,7 @@ In this hands on, you are going to validate the form data that was submitted and
     </cfif>
     ```
 
-1. Inside the `<cfif>` statement, set the `OK` variable to false.
+1. Inside the `<cfif>` statement, set the `ok` variable to false.
 1. You should end up with code similar to this:
 
     ```cfml
@@ -30,7 +30,7 @@ In this hands on, you are going to validate the form data that was submitted and
     ```
 
 1. Create `<cfif>` statements for the email and message fields in the form.
-1. After the last `<cfif>` statement, create a new `<cfif>` statement that checks if the `OK` value is equal to false. If it is equal to false, output the following:
+1. After the last `<cfif>` statement, create a new `<cfif>` statement that checks if the `ok` value is equal to false. If it is equal to false, output the following:
 
     ```cfml
     <p>You did not provide all the required information!</p>
