@@ -1,7 +1,14 @@
-<cflocation  url="insertDBdata.cfm">
+<cfscript>
+	param name="form.submitted" default="0";
 
+	systemName = CreateObject("java", "java.lang.System").getProperties()['os.name'];
 
-<cfparam name="form.submitted" default="0">
+	mariadbRootDefault = "/usr/local/mysql";
+
+	if (findnocase('windows', systemname))
+	mariadbRootDefault = "C:\Program Files\MariaDB";
+</cfscript>
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -38,35 +45,41 @@
 		</p>
 		<form class="form-horizontal" action="#cgi.script_name#" method="post">
 			<div class="control-group">
-				<label class="control-label" for="cfadmin">CF Administrator Password :<a class="pop" data-content="Use the password from step step 16 of Installing ColdFusion.  This is your ColdFUsion Administrator password." rel="popover" href="##" data-original-title="Which password to use?"><i class="icon-question-sign"></i></a></label>
+				<label class="control-label" for="cfadmin">CF Administrator Password :<a class="pop" data-content="Use the password from step 3 of Installing ColdFusion. This is your ColdFusion Administrator password." rel="popover" href="##" data-original-title="Which password to use?"><i class="icon-question-sign"></i></a></label>
 				<div class="controls">
 					<input type="password" id="cfadmin" placeholder="" name="cfadmin" tabindex="1">
 				</div>
 			</div>
 			<div class="control-group">
-				<label class="control-label" for="mysqlRoot">MySQL Root Password: <a class="pop" data-content="Use the password from step 15 of Installing MySQL.  This is your root password." rel="popover" href="##" data-original-title="Which password to use?"><i class="icon-question-sign"></i></a></label>
+				<label class="control-label" for="mysqlRootPw">MariaDB Root Password: <a class="pop" data-content="Use the password of user 'root'." rel="popover" href="##" data-original-title="Which password to use?"><i class="icon-question-sign"></i></a></label>
 				<div class="controls">
-					<input type="password" id="mysqlRoot" placeholder="" name="mysqlRoot" tabindex="2">
+					<input type="password" id="mysqlRootPw" placeholder="" name="mysqlRootPw" tabindex="2">
 				</div>
 			</div>
 			<p>
-				If you already had MySQL installed and did not follow the Installing MySQL instructions, you might need to update the information bellow.  If you followed the Installing MySQL Instructions then <strong>YOU DO NOT NEED TO MAKE ANY CHANGES</strong>
+				You might need to update the information bellow if you've changed any defaults during your MariaDB installation. You need to change at least the path to your MariaDB directory.
 			</p>
 			<div class="control-group">
-				<label class="control-label" for="mysqlip">MySQL IP:</label>
+				<label class="control-label" for="mysqlroot">MariaDB directory:</label>
 				<div class="controls">
-					<input type="text" id="mysqlip" placeholder="" name="mysqlip" value="localhost" tabindex="3">
+					<input type="text" id="mysqlroot" placeholder="" name="mysqlroot" value="#mariadbRootDefault#" tabindex="3">
 				</div>
 			</div>
 			<div class="control-group">
-				<label class="control-label" for="mysqlport">MySQL Port:</label>
+				<label class="control-label" for="mysqlip">MariaDB IP:</label>
 				<div class="controls">
-					<input type="text" id="mysqlport" placeholder="" name="mysqlport" value="3306" tabindex="4">
+					<input type="text" id="mysqlip" placeholder="" name="mysqlip" value="localhost" tabindex="4">
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="mysqlport">MariaDB Port:</label>
+				<div class="controls">
+					<input type="text" id="mysqlport" placeholder="" name="mysqlport" value="3306" tabindex="5">
 				</div>
 			</div>
 			 <div class="control-group">
 				<div class="controls">
-					<button type="submit" class="btn btn-primary" tabindex="5">Install</button>
+					<button type="submit" class="btn btn-primary" tabindex="6">Install</button>
 				</div>
 			</div>	
 		
@@ -77,7 +90,6 @@
 	
 </cfoutput>	
 <cfelse>
-	<cfset systemName = CreateObject("java", "java.lang.System").getProperties()['os.name']>
 	<cfset database = "learncfinaweek" />
 	<cfset messageList='database,datasource,tables,data' />
 	<cfset messages = {database={status='notPerformed', message='Database not created', detailedMessage=''}, datasource={status='notPerformed', message='Datasource not created', detailedMessage=''},tables={status='notPerformed', message='Tables not created', detailedMessage=''},data={status='notPerformed', message='Data not added', detailedMessage=''} } />
@@ -95,36 +107,43 @@
 			<cfif findnocase('mac',systemname)>
 				<cfset checkbatchfilename = expandpath('checkDB.sh') />
 				<cfset batchfilename = expandpath('createDB.sh') />
-				
+
 				<cfsavecontent variable="batchCheck">##!/bin/bash
-				cd /usr/local/mysql/bin
-				./mysql -u root -p#form.mysqlRoot# --execute="SHOW Databases" mysql
+					cd #form.mysqlroot#/bin
+					./mysql -u root -p#form.mysqlRootPw# --execute="SHOW Databases" mysql
 				</cfsavecontent>
 				<cfsavecontent variable="batchContent">##!/bin/bash
-				cd /usr/local/mysql/bin
-				./mysql -uroot -p#form.mysqlRoot# -e "CREATE DATABASE #database#"
-				</cfsavecontent>	
-				
+					cd #form.mysqlroot#/bin
+					./mysql -uroot -p#form.mysqlRootPw# -e "CREATE DATABASE #database#"
+				</cfsavecontent>
 			<cfelseif findnocase('windows',systemname)>
 				<cfset checkbatchfilename = expandpath('checkDB.bat') />
 				<cfset batchfilename = expandpath('createDB.bat') />
-				<cfsavecontent variable="batchCheck">cd C:\Program Files\MYSQL\MYSQL Server 5.5\bin
-				mysql -u root -p#form.mysqlRoot# --execute="SHOW Databases" mysql
+
+				<cfsavecontent variable="batchCheck">cd #form.mysqlroot#\bin
+					mysql -u root -p#form.mysqlRootPw# --execute="SHOW Databases" mysql
 				</cfsavecontent>
-				<cfsavecontent variable="batchContent">cd C:\Program Files\MYSQL\MYSQL Server 5.5\bin
-				mysql -uroot -p#form.mysqlRoot# -e "CREATE DATABASE #database#"
+				<cfsavecontent variable="batchContent">cd #form.mysqlroot#\bin
+					mysql -uroot -p#form.mysqlRootPw# -e "CREATE DATABASE #database#"
 				</cfsavecontent>		
 			<cfelse>
 				Operating system not found <cfdump var="#systemName#" abort />
-			</cfif>			
-				
+			</cfif>
+
+			<cfif not listReduce(",.exe,.sh", function(res, item) { return arguments.res || fileexists(form.mysqlroot & "/bin/mysql" & arguments.item); }, false, ",", true)>
+				<cfset messages['database'].message = 'Database could not be created' />
+				<cfset messages['database'].status = 'bad' />
+				<cfset messages['database'].detailedMessage = 'The provided path to your MariaDB installation is incorrect. Go back to the previous page and change the MariaDB path.' />
+				<cfthrow message = "Database creation failed">
+			</cfif>
+
 			<cffile action="write" file="#checkbatchfilename#" output="#batchCheck#" mode="777">
 			<cffile action="write" file="#batchfilename#" output="#batchContent#" mode="777">
 			
 			<cfexecute name="#checkbatchfilename#" arguments="" timeout="10" errorvariable="checkError" variable="checkOutput"></cfexecute>
 			
 			<cfif findnocase('Access denied for user',checkError)>
-				<cfset messages['database'].message = 'Database - Incorrect MySQL Login Details' />
+				<cfset messages['database'].message = 'Database - Incorrect MariaDB Login Details' />
 				<cfset messages['database'].status = 'bad' />
 				<cfset messages['database'].detailedMessage = 'The password you provided for the Root user is not correct.  Go back to the previous page and re-enter your password.' />
 				<cfthrow message = "Database creation failed">
@@ -139,7 +158,7 @@
 					<cfif findnocase('command not found',batchError)>
 						<cfset messages['database'].message = 'Database could not be created' />
 						<cfset messages['database'].status = 'bad' />
-						<cfset messages['database'].detailedMessage = 'Your copy of MySQL does not have the command line feature installed.  You must manually create  an empty database called learncfinaweek and retry the process.  To learn how to create a database click <a href="http://www.learncfinaweek.com/install/createdatabase/">here</a>.' />
+						<cfset messages['database'].detailedMessage = 'Your copy of MariaDB does not have the command line feature installed.  You must manually create  an empty database called learncfinaweek and retry the process.  To learn how to create a database click <a href="http://www.learncfinaweek.com/install/createdatabase/">here</a>.' />
 					<cfelse>
 						<cfset messages['database'].message = 'Database could not be created' />
 						<cfset messages['database'].status = 'bad' />
@@ -179,6 +198,9 @@
 				
 				throw(message='ColdFusion Administrator Login Failed');
 			}
+
+
+
 		    // Instantiate the data source object.
 		    myObj = createObject("component","cfide.adminapi.datasource");
 			
@@ -193,7 +215,7 @@
 			        port = "#form.mysqlport#",
 			        database = "#database#",
 			        username = "root",
-			        password = "#form.mysqlroot#",
+			        password = "#form.mysqlRootPw#",
 			        login_timeout = "29",
 			        timeout = "23",
 			        interval = 6,

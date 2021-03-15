@@ -19,7 +19,7 @@ In the first part of this hands on we are going to convert some pages to .cfm pa
 
 1. Now, let's output these variables. Locate the text \[Name\] on or around line 80. Replace \[Name\] with `#myName#`.
 1. Locate the text \[position\] on or around line 81. Replace \[position\] with `#myPosition#`.
-1. Refresh the page in your browser and confirm that you now see #myName# and #myPosition# displayed.
+1. Refresh the page in your browser and confirm that you now see #myName# and #myPosition# displayed - the content of the variables is not being rendered! We will fix this in the next step.
 1. In your code editor, locate the `#myName#` variable on or around line 80 and place a `<cfoutput>` tag before it and a `</cfoutput>` tag after it so that the code looks similar to this:
 
     ```cfml
@@ -40,7 +40,7 @@ In the first part of this hands on we are going to convert some pages to .cfm pa
 1. Go back to your code editor and add ColdFusion comments around the line of text so that it looks similar to this:
 
     ```cfml
-    <!\-\-\- This is where the name and position are output --->
+    <!--- This is where the name and position are output --->
     ```
 
 1. Refresh the browser and confirm that the text is no longer visible on the page.

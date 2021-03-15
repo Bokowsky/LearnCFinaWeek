@@ -48,8 +48,8 @@ In this section of the hands on we will switch from tag based code to script bas
     </cfoutput>
     ```
 
-1. To test that your changes have taken place, load the `/www/about.cfm` page in your browser.
-1. Notice that you have received a ColdFusion Error. The error states that it has found an Invalid CFML construct. This is due to the single # signs inside the links for email, website, and Skype. ColdFusion uses the # sign to denote variables and it is trying to evaluate everything between the first # sign and the next one. To resolve the error, we must escape the single # signs.
+1. To test that your changes have taken place, load the `/www/about.cfm` page in your browser. It now displays an error! We will fix this in the next step.
+1. The error states that it has found an Invalid CFML construct. This is due to the single # signs inside the links for email, website, and Skype. ColdFusion uses the # sign to denote an execution zone and it is trying to evaluate everything between the first # sign and the next one. To resolve the error, we must escape the single # signs.
 1. Locate the link that wraps around the email output on or around line 121.
 1. Update the value of the href attribute to ## rather than #. You're `<a>` tag should look similar to this:
 
@@ -59,6 +59,8 @@ In this section of the hands on we will switch from tag based code to script bas
 
 1. Do this also for the website and Skype links.
 1. Refresh the `/www/about.cfm` page in your browser and confirm that you now see your information being displayed.
+
+> **Quiz**: What would you write inside a cfoutput tag if you needed two pound signs next to each other like this: ## ?
 
 ## Homework
 
