@@ -7,4 +7,4 @@ In the day[_n_] directories you'll find the tutorial contents for each day _n_, 
 Since we are in the process of improving and restructuring the original resources, there may be only a subset of the days available right now. The rest will get added in time.
 
 ## sample-files
-This directory contains all sample files that are needed for the Hands-Ons. In [day1 - Installing Sample Files](day1/01.3_Installing_Sample_Files.md) you will be guided through the installation process.
+This directory contains all sample files that are needed for the Hands-Ons. In [chapter1 - Installing Sample Files](day1/chapter1/01.3_Installing_Sample_Files.md) you will be guided through the installation process.

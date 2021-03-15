@@ -1,3 +1,5 @@
+# Hands-On 02
+
 In this section of the hands on we will switch from tag based code to script based code and create a structure of data. We will then output that on the page.
 
 **Tags Used**: [\<cfscript>](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-tags/tags-r-s/cfscript.html), [\<cfoutput>](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-tags/tags-m-o/cfoutput.html)
