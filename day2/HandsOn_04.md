@@ -1,6 +1,6 @@
 # Hands-On 04
 
-In this hands on, you are going to validate the form data that was submitted and output any problems that might have occurred. We will access data from the form scope.
+In this Hands-On, you are going to validate the form data that was submitted and output any problems that might have occurred. We will access data from the form scope.
 
 **Tags Used**: [\<cfset>](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-tags/tags-r-s/cfset.html), [\<cfif>](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-tags/tags-i/cfif.html)
 

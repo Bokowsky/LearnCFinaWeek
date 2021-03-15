@@ -1,6 +1,6 @@
 # Hands-On 06
 
-In this hands on, we are going to refactor our code and take out any unnecessary logic we might have.
+In this Hands-On, we are going to refactor our code and take out any unnecessary logic we might have.
 
 **Tags Used**: [\<cfif>](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-tags/tags-i/cfif.html), [\<cfelse>](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-tags/tags-d-e/cfelse.html)
 

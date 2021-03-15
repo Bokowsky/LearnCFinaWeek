@@ -1,6 +1,6 @@
 # Hands-On 05
 
-In this hands on, you are going to update our code to provide a better user experience to your users as well as improve the form validation.
+In this Hands-On, you are going to update our code to provide a better user experience to your users as well as improve the form validation.
 
 **Tags Used**: [\<cfparam>](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-tags/tags-p-q/cfparam.html), [\<cfoutout>](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-tags/tags-m-o/cfoutput.html)
 

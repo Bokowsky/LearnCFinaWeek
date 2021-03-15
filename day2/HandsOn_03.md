@@ -1,6 +1,6 @@
 # Hands-On 03
 
-In this hands on, you are going to add some conditional logic to the site as well as create a form post.
+In this Hands-On, you are going to add some conditional logic to the site as well as create a form post.
 
 **Tags Used**: [\<cfif>](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-tags/tags-i/cfif.html), [\<cfparam>](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-tags/tags-p-q/cfparam.html)
 
