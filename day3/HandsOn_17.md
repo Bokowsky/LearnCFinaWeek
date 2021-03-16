@@ -1,6 +1,6 @@
 # Hands-On 17
 
-In this Hands-On we are going to create an encapsulated cfc that holds error data.
+In this Hands-On we are going to create an encapsulated CFC that holds error data.
 
 **Functions Used**: [ArrayAppend](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-functions/functions-a-b/arrayappend.html), [ArrayLen](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-functions/functions-a-b/arraylen.html)
 
@@ -28,8 +28,8 @@ In this Hands-On we are going to create an encapsulated cfc that holds error dat
 1. Inside the function append a struct to the `variables.error` variable. The structure should consist of 2 keys, `message` and `field`. Set each key to their related `argument` value. This function will be used to add errors to the object. Your function should look similar to this:
 
     ```cfml
-    public void function addError( required string message, required string field ){
-        arrayAppend( variables.errors, { message=arguments.message, field=arguments.field } );
+    public void function addError(required string message, required string field){
+        arrayAppend(variables.errors, { message=arguments.message, field=arguments.field });
     }
     ```
 
@@ -58,7 +58,7 @@ In this Hands-On we are going to create an encapsulated cfc that holds error dat
 
 1. Finally we will create a function that removes all errors from the object. Create a function called `clearErrors` that is `public`, does not return anything and accepts no arguments.
 1. Inside the function assign an empty array to the `variables.errors` variable.
-1. You have now created an encapsulated object. We will test that this object works in one of the other Hands-On's but for now confirm that your cfc looks similar to the following:
+1. You have now created an encapsulated object. We will test that this object works in one of the other Hands-On's but for now confirm that your CFC looks similar to the following:
 
     ```cfml
     component{
@@ -67,8 +67,8 @@ In this Hands-On we are going to create an encapsulated cfc that holds error dat
             return this;
         }
 
-        public void function addError( required string message, required string field ){
-            arrayAppend( variables.errors, { message=arguments.message, field=arguments.field } );
+        public void function addError(required string message, required string field){
+            arrayAppend(variables.errors, { message=arguments.message, field=arguments.field });
         }
 
 
@@ -77,7 +77,7 @@ In this Hands-On we are going to create an encapsulated cfc that holds error dat
         }
 
         public boolean function hasErrors(){
-            if ( arrayLen( variables.errors ) ){
+            if (arrayLen(variables.errors)){
                 return true;
             }
             else {
