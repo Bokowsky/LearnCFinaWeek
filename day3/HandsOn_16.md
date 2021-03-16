@@ -2,7 +2,7 @@
 
 In this Hands-On we will create an Application.cfc file, create some application wide variables, and implement some of the Application.cfc event handlers.
 
-**Tags Used**: [\<cfset>](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-tags/tags-r-s/cfset.html), [\<cfquery](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-tags/tags-p-q/cfquery.html)
+**Tags Used**: [\<cfset>](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-tags/tags-r-s/cfset.html), [\<cfquery\>](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-tags/tags-p-q/cfquery.html)
 
 **Functions Used**: [createTimeSpan](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-functions/functions-c-d/CreateTimeSpan.html), [structKeyExists](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-functions/functions-s/structkeyexists.html), [createObject](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-functions/functions-c-d/CreateObject.html)
 
@@ -19,14 +19,14 @@ In this Hands-On we will create an Application.cfc file, create some application
 1. Create another variable in the `this` scope called `applicationTimeout` and give it a value of:
 
     ```cfml
-    createTimeSpan( 10, 0, 0, 0 );
+    createTimeSpan(10, 0, 0, 0);
     ```
 
 1. Create another variable in the this scope called `sessionManagement` and set it to true.
 1. Create another variable in the this scope called `sessionTimeout` and give it a value of:
 
     ```cfml
-    createTimeSpan( 0, 0, 30, 0 );
+    createTimeSpan(0, 0, 30, 0);
     ```
 
 1. Your code should look similar to this:
@@ -35,9 +35,9 @@ In this Hands-On we will create an Application.cfc file, create some application
     component{
         this.name='learncfinaweek';
         this.datasource='learncfinaweek';
-        this.applicationTimeout = createTimeSpan( 10, 0, 0, 0 );
+        this.applicationTimeout = createTimeSpan(10, 0, 0, 0);
         this.sessionManagement = true;
-        this.sessionTimeout = createTimeSpan( 0, 0, 30, 0 );
+        this.sessionTimeout = createTimeSpan(0, 0, 30, 0);
     }
     ```
 
@@ -67,8 +67,8 @@ In this Hands-On we will create an Application.cfc file, create some application
 1. Your code should look similar to this:
 
     ```cfml
-    function onRequestStart( string targetPage ){
-        if ( structKeyExists( url, 'reload' ) ){
+    function onRequestStart(string targetPage){
+        if (structKeyExists(url, 'reload')){
             onApplicationStart();
         }
     }
@@ -87,7 +87,7 @@ In this Hands-On we will create an Application.cfc file, create some application
 1. In the `onApplicationStart` function in the `/www/Application.cfc` file, create a new application variable called 'utilities'. Set the value of `application.utilities` to:
 
     ```cfml
-    createObject( 'cfc.utilities' );
+    createObject('cfc.utilities');
     ```
 
 1. Your code should look similar to:
@@ -96,7 +96,7 @@ In this Hands-On we will create an Application.cfc file, create some application
     function onApplicationStart() {
         application.myName = 'Simon';
         application.myPosition = 'A Great Developer';
-        application.utilities = createObject( 'cfc.utilities' );
+        application.utilities = createObject('cfc.utilities');
         return true;
     }
     ```
