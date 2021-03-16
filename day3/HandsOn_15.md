@@ -1,6 +1,6 @@
 # Hands-On 15
 
-In this Hands-On, let's create a component where we will place the `convertStringToASCII` function inside of a component and instantiate it.
+In this Hands-On, let's create a component where we will place the `convertStringToASCII` function and let us instantiate the component.
 
 **Tags Used**: [\<cfcomponent>](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-tags/tags-c/cfcomponent.html), [\<cffunction>](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-tags/tags-f/cffunction.html)
 
@@ -29,27 +29,28 @@ In this Hands-On, let's create a component where we will place the `convertStrin
             <cfset var convertedString = ''>
 
             <cfloop from="1" to="#len( arguments.StringToBeConverted )#" index="i">
-                <cfset convertedString &= '&##' & asc( mid( arguments.StringTobeConverted, i, 1 ) ) & ';'>
+                <cfset convertedString &= '&##' & asc(mid(arguments.StringTobeConverted, i, 1)) & ';'>
             </cfloop>
 
             <cfreturn convertedString>
         </cffunction>
     </cfcomponent>
     ```
+   > **Note:** While in this sample file we are using CFTag to create some components and functions, in a real project you should always use the script syntax, since it makes the component code far more readable. There _are_ cases where CFTag is a good choice for components, for example for better code highlighting and general IDE support for a few tags or when they contain raw HTML/JS code, but they are not common.
 
 1. In `/www/about.cfm`, replace the `<cffunction>` tag block with a `<cfset>` tag. The `<cfset>` tag should set a variable called `utilities` and should instantiate the utilities component by using the following code:
 
     ```cfml
-    <cfset utilities = createObject( 'cfc.utilities' )>
+    <cfset utilities = createObject('cfc.utilities')>
     ```
 
 1. Locate the call to the `convertStringToASCII` function, which should be on or around line 58, and change the function call to `utilities.convertStringToASCII`. The line of code should look similar to this:
 
     ```cfml
-    #utilities.convertStringToASCII( personalInfo.email )#
+    #utilities.convertStringToASCII(personalInfo.email)#
     ```
 
-1. Go to the `/www/about.cfm` page in your browser and notice that the email address displays as it did before. The `convertStringToASCII` function is now in a cfc that can be instantiated from any page.
+1. Go to the `/www/about.cfm` page in your browser and notice that the email address displays as it did before. The `convertStringToASCII` function is now in a CFC that can be instantiated from any page.
 
 Homework
 --------

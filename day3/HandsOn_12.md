@@ -18,8 +18,10 @@ In this Hands-On, let's create a function that will take a string and output a s
     * **required**: true
 1. Your code should look similar to this:
 
-        <cffunction name="convertStringToASCII" output="false" returntype="String" hint="Converts string to asccii string" >
-            <cfargument name="stringToBeConverted" type="string" required="true">
+   ```cfml
+     <cffunction name="convertStringToASCII" output="false" returntype="String" hint="Converts string to asccii string" >
+         <cfargument name="stringToBeConverted" type="string" required="true">
+   ```
 
 1. After the `<cfargument>` tag, create a `<cfset>` that sets an empty string to a variable called `convertedString`.
 1. Before the variable name in the `<cfset>` tag, enter the word `Var`. This will scope the variable to the scope that is local to the function and will not interfere with any other variables on the page.
@@ -31,12 +33,12 @@ In this Hands-On, let's create a function that will take a string and output a s
 
 1. After the `<cfset>` tag, create a `<cfloop>` tag with the following attributes:
     * **from**: 1
-    * **to**: #len( arguments.stringToBeConverted )#
+    * **to**: #len(arguments.stringToBeConverted)#
     * **index**: i
 1. After the opening `<cfloop>` tag, create a `<cfset>`. This `<cfset>` tag will use string concatenation and should look similar to this:
 
     ```cfml
-    <cfset convertedString &= '&##' & asc( mid( arguments.StringTobeConverted, i, 1 ) ) & ';'>
+    <cfset convertedString &= '&##' & asc(mid(arguments.StringTobeConverted, i, 1)) & ';'>
     ```
 
 1. After the `<cfset>` tag, create a closing `</cfloop>` tag.
@@ -49,8 +51,8 @@ In this Hands-On, let's create a function that will take a string and output a s
         <cfargument name="stringToBeConverted" type="string" required="true">
         <cfset var convertedString = ''>
 
-        <cfloop from="1" to="#len( arguments.StringToBeConverted )#" index="i">
-            <cfset convertedString &= '&##' & asc( mid( arguments.StringTobeConverted, i, 1) ) & ';'>
+        <cfloop from="1" to="#len(arguments.StringToBeConverted)#" index="i">
+            <cfset convertedString &= '&##' & asc(mid(arguments.StringTobeConverted, i, 1)) & ';'>
         </cfloop>
 
         <cfreturn convertedString>
@@ -61,7 +63,7 @@ In this Hands-On, let's create a function that will take a string and output a s
 1. Wrap the `personalInfo.email` output with a call to the `convertStringToASCII` function call. Your code should look similar to this:
 
     ```cfml
-    #convertStringToASCII( personalInfo.email )#
+    #convertStringToASCII(personalInfo.email)#
     ```
 
 1. Browse to the `/www/about.cfm` page in your browser.
