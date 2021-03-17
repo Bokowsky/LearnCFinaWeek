@@ -1,6 +1,10 @@
-In this hands on example, you are going to make a call to Twitter to get a list of your latest tweets and output them to the contact page.
+# Hands-On 18
 
-**Update**: This hands on originally used the twitter api v1, which is no longer supported. We hae updated the code sample to use a different xml file.
+> **Attention!** At this point we've skipped a couple of topics in the original tutorial, because they aren't that relevant for us. If you notice discrepancies with what you have and what the Hands-Ons from now on assume you have, it would be a good idea to use [this solution project](../sample-files/chapter9solution) as your new basis.
+
+In this Hands-On example, you are going to make a call to Twitter to get a list of your latest tweets and output them to the contact page.
+
+**Update**: This Hands-On originally used the twitter api v1, which is no longer supported. We hae updated the code sample to use a different xml file.
 
 **Tags Used**: [\<cfhttp>](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-tags/tags-g-h/cfhttp.html), [\<cfloop>](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-tags/tags-j-l/cfloop.html), [\<cfoutput>](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-tags/tags-m-o/cfoutput.html)
 
