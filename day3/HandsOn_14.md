@@ -1,79 +1,58 @@
-# Hands-On 14
+# Hands-On 15
 
-In this Hands-On, we will create a custom tag that will handle the display of the header and footer.
+In this Hands-On, let's create a component where we will place the `convertStringToASCII` function and let us instantiate the component.
 
-**Tags Used**: [\<cfif>](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-tags/tags-i/cfif.html), [\<cfelse>](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-tags/tags-d-e/cfelse.html), [\<cfset>](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-tags/tags-r-s/cfset.html), [\<cfimport>](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-tags/tags-i/cfimport.html)
+**Tags Used**: [\<cfcomponent>](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-tags/tags-c/cfcomponent.html), [\<cffunction>](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-tags/tags-f/cffunction.html)
 
-1. Create a folder called `customTags` in the `/www/` folder.
-1. Create a file called `page.cfm` in the `/www/customTags/` folder.
-1. Open the `/www/customTags/page.cfm` file in your code editor.
-1. Create a `<cfif>` tag that checks if `thisTag.executionMode` is equal to `"Start"`.
-1. Create a `<cfelse>` tag after the `<cfif>` tag.
-1. Create a closing `</cfif>` tag after the `<cfelse>` tag.
-1. Your code should look similar to this:
+**Functions Used**: [createObject](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-functions/functions-c-d/CreateObject.html)
 
-    ```cfml
-    <cfif thisTag.executionMode eq "start">
-
-    <cfelse>
-
-    </cfif>
-    ```
-
-1. Open up the `/www/includes/header.cfm` file in your code editor.
-1. Copy the contents of `header.cfm` and paste them into the first part of the `<cfif>` tag block in `page.cfm`.
-1. Open up the `/www/includes/footer.cfm` file in your code editor.
-1. Copy the contents of `footer.cfm` and paste them into the `<cfelse>` part of the `<cfif>` statement in `page.cfm`.
-1. Open up the `/www/about.cfm` file in your code editor and navigate to the `<cfset>` tag located on or around line 4.
-1. Replace the `<cfset>` tag with a `<cfimport>` tag with the following attributes:
-    * **taglib**: customTags/
-    * **prefix**: layout
-1. Your code should look similar to this:
+1. Create a folder called `cfc` inside the `/www/` folder.
+1. Create a file called `utilities.cfc` inside of the `/www/cfc/ `folder.
+1. Open up the `/www/cfc/utilities.cfc` file in your code editor.
+1. Create an open and closing `<cfcomponent>` tag. Your code should look something like this:
 
     ```cfml
-    <cfimport taglib="customTags/" prefix="layout">
+    <cfcomponent>
+
+    </cfcomponent>
     ```
 
-1. Replace the `<cfinclude>` tag, which includes the `header.cfm` file, with a call to your custom tag. The code should look similar to this:
-
-    ```cfml
-    <layout:page>
-    ```
-
-1. Replace the `<cfinclude>` tag, which includes the `footer.cfm` file, with a closing tag to your custom tag. Your code should look similar to this:
-
-    ```cfml
-    </layout:page>
-    ```
-
-1. Open up your browser and navigate to the `/www/about.cfm` page. Notice that the page loads as it did before. The page is now using your custom tag rather than the include files. The only exception is that the 'Home' navigation item is being selected rather than the 'About' navigation item.
-1. Open up the `/www/customtags/page.cfm` file in your code editor.
-1. Find the `<cfparam>` tag that should be on or around line 2.
-1. Change the name attribute from `section` to `attributes.section`.
-1. Locate the Navigation `<ul>` block on or around line 51. For each reference to section in the `<cfif>` tags in the `<li>` tags, update them to read `attributes.section` rather than `section`. Your code should look similar to this:
-
-    ```cfml
-    <ul class="arrowunderline" id="nav">
-        <li class="home" <cfif attributes.section eq "home">id="selected"</cfif>><a href="index.cfm">Home</a></li>
-        <li class="about" <cfif attributes.section eq "about">id="selected"</cfif>><a href="about.cfm">About</a></li>
-        <li class="resume" <cfif attributes.section eq "resume">id="selected"</cfif>><a href="resume.cfm">Resume</a></li>
-        <li class="blog" <cfif attributes.section eq "blog">id="selected"</cfif>><a href="blog.cfm">Blog</a></li>
-        <li class="portfolio" <cfif attributes.section eq "portfolio">id="selected"</cfif>><a href="portfolio.cfm">Portfolio</a></li>
-        <li class="contact" <cfif attributes.section eq "contact">id="selected"</cfif>><a href="contact.cfm">Contact</a></li>
-    </ul>
-    ```
-
-1. Refresh the `about.cfm` page in your browser notice the home nav item is highlighted.
 1. Open up the `/www/about.cfm` file in your code editor.
-1. Locate the `<layout:page>` tag and add an attribute called `section` with a value of "about". Your code should look similar to this:
+1. Copy the `<cffunction>` block of code and paste it between the `<cfcomponent>` tags in `/www/cfc/utilities.cfc`.
+1. Inside the `<cffunction>` tag, add an attribute called `access` and set it to "public".
+1. Your code should look similar to this:
 
     ```cfml
-    <layout:page section="about">
+    <cfcomponent>
+        <cffunction name="convertStringToASCII" output="false" returntype="String" hint="Converts string to asccii string" access="public">
+            <cfargument name="stringToBeConverted" type="string" required="true">
+            <cfset var convertedString = ''>
+
+            <cfloop from="1" to="#len( arguments.StringToBeConverted )#" index="i">
+                <cfset convertedString &= '&##' & asc(mid(arguments.StringTobeConverted, i, 1)) & ';'>
+            </cfloop>
+
+            <cfreturn convertedString>
+        </cffunction>
+    </cfcomponent>
+    ```
+   > **Note:** While in this sample file we are using CFTag to create some components and functions, in a real project you should always use the script syntax, since it makes the component code far more readable. There _are_ cases where CFTag is a good choice for components, for example for better code highlighting and general IDE support for a few tags or when they contain raw HTML/JS code, but they are not common.
+
+1. In `/www/about.cfm`, replace the `<cffunction>` tag block with a `<cfset>` tag. The `<cfset>` tag should set a variable called `utilities` and should instantiate the utilities component by using the following code:
+
+    ```cfml
+    <cfset utilities = createObject('cfc.utilities')>
     ```
 
-1. Refresh the `about.cfm` page in your browser and confirm that the 'About' navigation item is now highlighted.
+1. Locate the call to the `convertStringToASCII` function, which should be on or around line 58, and change the function call to `utilities.convertStringToASCII`. The line of code should look similar to this:
+
+    ```cfml
+    #utilities.convertStringToASCII(personalInfo.email)#
+    ```
+
+1. Go to the `/www/about.cfm` page in your browser and notice that the email address displays as it did before. The `convertStringToASCII` function is now in a CFC that can be instantiated from any page.
 
 Homework
 --------
 
-Convert all other pages to use the page custom tag
+Convert the email address in the file /www/contact.cfm to use the convertStringToASCII function.

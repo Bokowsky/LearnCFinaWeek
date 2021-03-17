@@ -1,71 +1,62 @@
-# Hands-On 12
+# Hands-On 13
 
-In this Hands-On, let's create a function that will take a string and output a string of ASCII characters. Some people think that this will stop email addresses from being spidered. This may or may not be the case, but the logic for creating a function is still the same.
+In this Hands-On, we are going to separate out the header and footer and put the code into separate files that will be included.
 
-**Tags Used**: [\<cfscript>](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-tags/tags-r-s/cfscript.html), [\<cffunction>](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-tags/tags-f/cffunction.html), [\<cfargument>](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-tags/tags-a-b/cfargument.html), [\<cfset>](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-tags/tags-r-s/cfset.html), [\<cfloop>](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-tags/tags-j-l/cfloop.html), [\<cfreturn>](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-tags/tags-r-s/cfreturn.html)
+**Tags Used**: [\<cfinclude>](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-tags/tags-i/cfinclude.html), [\<cfparam>](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-tags/tags-p-q/cfparam.html), [\<cfif>](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-tags/tags-i/cfif.html), [\<cfset>](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-tags/tags-r-s/cfset.html)
 
-**Functions Used**: [asc](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-functions/functions-a-b/asc.html), [mid](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-functions/functions-m-r/mid.html)
-
+1. Create a folder called `includes` in the `www` folder.
+1. Create a new file in `/www/includes/` called `header.cfm`.
+1. Create a new file in `/www/includes/` called `footer.cfm`.
 1. Open up the `/www/about.cfm` file in your code editor.
-1. Below the closing `</cfscript>` tag, create a `<cffunction>` tag with the following attributes:
-    * **name**: convertStringToASCII
-    * **output**: false
-    * **returntype**: string
-    * **hint**: Converts String to ASCII String
-1. Directly after the open `<cffunction>` tag, create a `<cfargument>` tag with the following attributes:
-    * **name**: stringToBeConverted
-    * **type**: string
-    * **required**: true
-1. Your code should look similar to this:
-
-   ```cfml
-     <cffunction name="convertStringToASCII" output="false" returntype="String" hint="Converts string to asccii string" >
-         <cfargument name="stringToBeConverted" type="string" required="true">
-   ```
-
-1. After the `<cfargument>` tag, create a `<cfset>` that sets an empty string to a variable called `convertedString`.
-1. Before the variable name in the `<cfset>` tag, enter the word `Var`. This will scope the variable to the scope that is local to the function and will not interfere with any other variables on the page.
-1. Your code should look similar to this:
-
-    ```cfml
-    <cfset var convertedString = ''>
-    ```
-
-1. After the `<cfset>` tag, create a `<cfloop>` tag with the following attributes:
-    * **from**: 1
-    * **to**: #len(arguments.stringToBeConverted)#
-    * **index**: i
-1. After the opening `<cfloop>` tag, create a `<cfset>`. This `<cfset>` tag will use string concatenation and should look similar to this:
+1. Copy all lines from `<!DOCTYPE`, on line 2, down to and including the `<!--header end -->` line, on line 76.
+1. Paste these lines of code into the `header.cfm` file.
+1. Delete these lines from `/www/about.cfm`.
+1. Copy all lines from below the `about end` comment.
+1. Paste these lines of code into `footer.cfm`.
+1. Delete these lines from `/www/about.cfm`.
+1. In a browser, navigate to the `/www/about.cfm` page. Notice that it no longer looks correct.
+1. Go back to the `/www/about.cfm` file in your code editor.
+1. At the top of the file, just below your `<cffunction>` tag block on or around line 11 and create a new tag called `<cfinclude>` with the following attribute:
+    *   **template**: includes/header.cfm
+1. Go to the bottom of the file and create a `<cfinclude>` tag with the following attribute:
+    *   **template**: includes/footer.cfm
+1. Go back to your browser and refresh the `about.cfm` file. You should now see the page as it used to be.
+1. Open up the `/www/includes/header.cfm` file in your code editor.
+1. At the top of the page, create a `<cfparam>` tag with the following attributes:
+    *   **name**: section
+    *   **default**: home
+1. Locate the link to the homepage in the navigation, which should be on or around line 51.
+1. Inside the `<li>` tag, add the following line of code:
 
     ```cfml
-    <cfset convertedString &= '&##' & asc(mid(arguments.StringTobeConverted, i, 1)) & ';'>
+    <cfif section eq "home">id="selected"</cfif>
     ```
 
-1. After the `<cfset>` tag, create a closing `</cfloop>` tag.
-1. Below the closing </cfloop> tag, create a <cfreturn> tag that returns the convertedString variable.
-1. Below the `<cfreturn>` tag, create a closing `</cffunction>` tag.
-1. Your function should look similar to this:
+1. Do the same for the other links in the navigation, but instead of checking if `section eq "home"`, replace home with the value of the `<li>` class.
+1. Once completed your code should look similar to this:
 
     ```cfml
-    <cffunction name="convertStringToASCII" output="false" returntype="String" hint="Converts string to asccii string" >
-        <cfargument name="stringToBeConverted" type="string" required="true">
-        <cfset var convertedString = ''>
-
-        <cfloop from="1" to="#len(arguments.StringToBeConverted)#" index="i">
-            <cfset convertedString &= '&##' & asc(mid(arguments.StringTobeConverted, i, 1)) & ';'>
-        </cfloop>
-
-        <cfreturn convertedString>
-    </cffunction>
+    <ul class="arrowunderline" id="nav">
+        <li class="home" <cfif section eq "home">id="selected"</cfif>><a href="index.cfm">Home</a></li>
+        <li class="about" <cfif section eq "about">id="selected"</cfif>><a href="about.cfm">About</a></li>
+        <li class="resume" <cfif section eq "resume">id="selected"</cfif>><a href="resume.cfm">Resume</a></li>
+        <li class="blog" <cfif section eq "blog">id="selected"</cfif>><a href="blog.cfm">Blog</a></li>
+        <li class="portfolio" <cfif section eq "portfolio">id="selected"</cfif>><a href="portfolio.cfm">Portfolio</a></li>
+        <li class="contact" <cfif section eq "contact">id="selected"</cfif>><a href="contact.cfm">Contact</a></li>
+    </ul>
     ```
 
-1. Locate the `personalInfo.email` output which should be on or around line 129.
-1. Wrap the `personalInfo.email` output with a call to the `convertStringToASCII` function call. Your code should look similar to this:
+1. Refresh the `/www/about.cfm` page in your browser. You will notice that the navigation is currently highlighting the 'Home' navigation item rather than the 'About' navigation item. This is because we have not set the Section variable on the `about.cfm` page.
+1. Open up the `/www/about.cfm` in your code editor and locate the `<cfinclude>` tag which includes the header. This should be on or around line 12.
+1. Before the `<cfinclude>` tag, create a `<cfset>` tag and set the value of `About` to a variable called `Section`. Your code should look similar to this:
 
     ```cfml
-    #convertStringToASCII(personalInfo.email)#
+    <cfset section = "About">
     ```
 
-1. Browse to the `/www/about.cfm` page in your browser.
-1. You should see no change to your page.
-1. View the source of the page and locate where the email address is being output. You should no longer see the email address but a stream of ASCII characters.
+1. In your browser, refresh the `/www/about.cfm` page and notice that the 'About' navigation item is now highlighted.
+
+Home Work
+---------
+
+Update all other pages in the site so that they use the included header and footer rather than the inline code.
