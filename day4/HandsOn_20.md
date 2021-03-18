@@ -1,71 +1,158 @@
 # Hands-On 20
 
-In this Hands-On, we are going to add security to the blog comments. As this section allows users to supply data that will be stored in a database and will also be output to other users, this is a weakest point of the application.
+In this Hands-On, we are going to import and export data into the blog section using Excel.
 
-**Tags Used**: [\<cfif>](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-tags/tags-i/cfif.html), [\<cfset>](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-tags/tags-r-s/cfset.html), [\<cfthrow>](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-tags/tags-t/cfthrow.html)
+**Tags Used**: [\<cffile>](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-tags/tags-f/cffile.html), [\<cfspreadsheet>](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-tags/tags-r-s/cfspreadsheet.html), [\<cfloop>](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-tags/tags-j-l/cfloop.html), [\<cfset>](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-tags/tags-r-s/cfset.html), [\<cfscript>](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-tags/tags-r-s/cfscript.html), [\<cfheader>](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-tags/tags-g-h/cfheader.html), [\<cfcontent>](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-tags/tags-c/cfcontent.html)
 
-**Functions Used**: [isSimpleValue](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-functions/functions-in-k/issimplevalue.html), [canonicalize](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-functions/functions-c-d/Canonicalize.html), [CSRFGenerateToken](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-functions/functions-c-d/CSRFGenerateToken.html), [CSRFverifyToken](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-functions/functions-c-d/CSRFVerifyToken.html), [encodeForHTML](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-functions/functions-e-g/encodeforhtml.html)
+**Functions Used**: [getTempDirectory](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-functions/functions-e-g/gettempdirectory.html), [EntityNew](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-functions/functions-e-g/entitynew.html), [EntitySave](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-functions/functions-e-g/entitysave.html), [ormFlush](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-functions/functions-m-r/ormflush.html), [EntityLoad](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-functions/functions-e-g/entityload.html), [spreadsheetNew](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-functions/functions-s/spreadsheetnew.html), [spreadsheetAddRow](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-functions/functions-s/spreadsheetaddrow.html), [spreadsheetFormatRow](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-functions/functions-s/spreadsheetformatrow.html), [spreadsheetAddRows](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-functions/functions-s/spreadsheetaddrows.html), [spreadsheetWrite](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-functions/functions-s/spreadsheetwrite.html)
 
-1. Open up the `/www/blogpost.cfm` file in your code editor.
-1. The first thing we are going to do is add some checks to make sure the values in the form are all simple values. Locate the `<cfif>` statement that checks if the `form` has been submitted on or around line 3.
-1. Inside the `<cfif>`, prior to creating a new `blogcomment` entity, create a new `if` statement that checks if the `form.author` variable is a simple value. Your code should look similar to this:
+1. First, let's look at the import process. Open up the `/www/admin/content/blog/importBlog.cfm` file in your code editor.
+1. Before importing a spreadsheet, we must first move it to the server. Locate the `Upload File` comment tag. On the line below, create a `<cffile>` tag with the following attributes:
+    * **action**: upload
+    * **destination**: #getTempDirectory()#
+    * **fileField**: importFile
+    * **nameconflict**: makeunique
+1. Your code should look similar to this:
 
-    ```cfml
-    <cfif isSimpleValue(form.author)>
+   ```cfml
+    <cffile action="upload" destination="#getTempDirectory()#" filefield="importFile" nameconflict="makeunique">
+   ```
 
-    </cfif>
-    ```
-
-1. Once we know the value is a simple value, we need to call the `canonicalize()` method on the `form.author` value. To make things easier, assign the result of the `canonicalize()` call back to the `form.author` variable. The code will look similar to this:
-
-    ```cfml
-    <cfset form.author = canonicalize(form.author, true, true)>
-    ```
-
-1. Do the same for the remaining `comment` variable. Your final code should look similar to this:
-
-    ```cfml
-    <cfif isSimpleValue(form.author)>
-        <cfset form.author = canonicalize(form.author, true, true)>
-    </cfif>
-    <cfif isSimpleValue(form.comment)>
-        <cfset form.comment = canonicalize(form.comment, true, true)>
-    </cfif>
-    ```
-
-1. Next, check if any of the values were not simple values. If one was not a simple value, it will throw an error. Create a `<cfif>` statement that checks if either are not simple values, and if one isn't, throw an error with the message `Validation Error`. Your code should look similar to this:
+1. Once the file is on the server, we can parse the file and put it into a query variable by using the `<cfspreadsheet>` tag. Locate the `Read Spreadsheet` comment and create a `<cfspreadsheet>` tag on the line below with the following attributes:
+    * **action**: read
+    * **src**: #cffile.serverDirectory#/#cffile.serverfile#
+    * **query**: importData
+    * **headerRow**: 1
+    * **excludeHeaderRow**: true
+1. Your code should look similar to this:
 
     ```cfml
-    <cfif not isSimpleValue(form.author) or not isSimpleValue(form.comment)>
-        <cfthrow message="Validation Error" >
-    </cfif>
+    <cfspreadsheet action="read" src="#cffile.serverDirectory#/#cffile.serverfile#" query="importData" headerrow="1" excludeheaderrow="true">
     ```
 
-1. Next, we will utilize ColdFusion's CSRF support by generating and validating a CSRF token. Locate the hidden field in the comment form on or around line 99.
-1. Create a new hidden field called `token`, and give it the value:
+1. Once the spreadsheet has been read into a query variable, loop over the query and create a new `blogPost` entity for each row. To do this, locate the `Import Data` comment tag and create a new `<cfloop>` tag below it with the following attribute:
+    * **query**: importData
+1. Inside the `<cfloop>` tag, create a `<cfset>` tag that loads in a new `blogPost` entity and saves it in a variable called `blogPost`.
+1. Below the `<cfset>`, create new `<cfset>` tags that set the title, summary, body, and date posted values. Note that because the Date Posted column in the spreadsheet has a space in it, you must use bracket notation to access the value rather than dot notation. Your code should look similar to this:
 
     ```cfml
-    #CSRFGenerateToken()#
+    <cfloop query="importData">
+        <cfset blogPost = EntityNew('blogPost')>
+        <cfset blogPost.title = importData.title>
+        <cfset blogPost.summary = importData.summary>
+        <cfset blogPost.body = importData.body>
+        <cfset blogPost.dateposted = importData\['Date Posted'\]>
+    </cfloop>
     ```
 
-1. Go to the top of the page and create a new `<cfparam>` tag for the `form.token` variable and default it to empty.
-1. Go back to the `<cfif>` statement on or around line 11 which checks if any of the `form` fields is not a simple value.
-1. Inside the `<cfif>` tag, check if the token value passed is a valid CSRF token. If the token is not valid, the same error will be thrown by the validation. Your final code should look similar to this:
+1. The next step is to save the entity. Just before the closing `</cfloop>` tag, create a `<cfset>` tag that calls `EntitySave` on the `blogPost` entity.
+1. After the closing `</cfloop>` tag, create another `<cfset>` tag that calls `ormFlush()`. This will commit all changes to the database. Your final code should look similar to this:
 
     ```cfml
-    <cfif not isSimpleValue(form.author) or not isSimpleValue(form.comment) or not CSRFVerifyToken(form.token)>
-        <cfthrow message="Validation Error" >
-    </cfif>
+    <!--- Upload File--->
+    <cffile action="upload" destination="#getTempDirectory()#" filefield="importFile" nameconflict="makeunique">
+
+    <!--- Read Spreadsheet --->
+    <cfspreadsheet action="read" src="#cffile.serverDirectory#/#cffile.serverfile#" query="importData" headerrow="1" excludeheaderrow="true">
+
+    <!--- Import Data --->
+    <cfloop query="importData">
+        <cfset blogPost = EntityNew('blogPost')>
+        <cfset blogPost.title = importData.title>
+        <cfset blogPost.summary = importData.summary>
+        <cfset blogPost.body = importData.body>
+        <cfset blogPost.dateposted = importData\['Date Posted'\]>
+        <cfset EntitySave(blogPost)>
+    </cfloop>
+
+    <cfset ormFlush()>
     ```
 
-1. Now that all the data has been checked on input, we now need to validate the data on output. Locate where the comment body is output to the screen on or around line 75.
-1. Wrap the `#comment.comment#` output in an `encodeForHTML()` call so that the line of code looks similar to this:
+1. Open up the `/www/admin/content/blog/importBlog.cfm` page in your browser.
+1. Select an Excel file and click 'Import'. A template Excel file can be found at: `/www/assets/blogImport.xslx`.
+1. Go to the `/www/admin/content/blog/listblogpost.cfm` page in your browser and you will see the imported blog posts.
+1. Now that the import process is completed, you are going to create an export process. Create a new file called `exportBlog.cfm` in the `/www/admin/content/blog/` folder.
+1. Open up the `/www/admin/content/blog/exportBlog.cfm` file in your code editor.
+1. For this task, you are going to write some of it in *cfscript*, so you will need to create a new `<cfscript>` block.
+1. Inside the `<cfscript>`, create a variable called `blogPosts` that contains all the `blogPost` entities. You can do this by calling `EntityLoad('blogPost')`.
+1. On the next line, create a new spreadsheet called `exportSpreadhseet` by calling the `SpreadsheetNew` function and pass it in a string of 'Blog Posts'. This will name our first sheet Blog Posts. Your code should look similar to this:
 
     ```cfml
-    #encodeForHTML(comment.comment)#
+    <cfscript>
+        blogPosts = EntityLoad('blogPost');
+        exportSpreadsheet = SpreadsheetNew('Blog Posts');
+    </cfscript>
     ```
 
-1. Make the same update for the `author` output on or around line 72.
-1. Open up `/www/blog.cfm` in your browser and navigate to a blog post.
-1. Confirm that the page loads successfully.
-1. Post a new comment and confirm that it still saves and outputs to the screen. Your blog now has additional security! Remember, even though it has security, it still not be considered 100% secure.
+1. Once you have the spreadsheet object created, add a heading row. To do this, call the `SpreadsheetAddRow` function and pass it in the `exportSpreadhseet` object with a comma delimited string of the column headings you want. For this example, the code will look similar to:
+
+    ```cfml
+    SpreadsheetAddRow(exportSpreadsheet, 'ID,Title,Summary,Body,Date Posted');
+    ```
+
+1. As this row is a header row, you will want to add some styles to denote that. Using the `SpreadsheetFormatRow` function, format the first row so it is Bold and aligned center. To do this, place the following code below the `SpreadsheetAddRow` call:
+
+    ```cfml
+    SpreadsheetFormatRow(exportSpreadsheet, {bold=true,alignment='Center'}, 1);
+    ```
+
+1. Once the header is formatted, add the remaining data to the spreadsheet. Loop over the query and call `SpreadsheetAddRow` on each iteration and pass in the `spreadsheetObject`, in this case `exportSpreadsheet`, and a list of data. The code should look like this:
+
+    ```cfml
+    for (blogPost in blogPosts){
+        SpreadsheetAddRow(exportSpreadsheet, '#blogPost.id#,#blogPost.title#,#blogPost.summary#,#blogPost.body#,#blogPost.datePosted#');
+    }
+    ```
+
+1. Now that all the data is in the spreadsheet, save the spreadsheet to the server. To do that, call the `spreadsheetWrite` function and pass it in the `spreadsheetObject`, which is the path of the file we want it to be written to, and you can choose to overwrite the file that might already be there. In this case, write the file to the servers temp directory and have it overwrite any file that might already exist with the same name by using the following code:
+
+    ```cfml
+    SpreadsheetWrite(exportSpreadsheet, getTempDirectory() & 'blogPosts.xls', true);
+    ```
+
+1. Our completed `<cfscript>` block should look similar to this:
+
+    ```cfml
+    <cfscript>
+        blogPosts = EntityLoad('blogPost');
+        exportSpreadsheet = SpreadsheetNew('Blog Posts');
+        SpreadsheetAddRow(exportSpreadsheet, 'ID,Title,Summary,Body,Date Posted');
+        SpreadsheetFormatRow(exportSpreadsheet, {bold=true,alignment='Center'}, 1);
+        for (blogPost in blogPosts){
+            SpreadsheetAddRow(exportSpreadsheet, '#blogPost.id#,#blogPost.title#,#blogPost.summary#,#blogPost.body#,#blogPost.datePosted#');
+        }
+        SpreadsheetWrite(exportSpreadsheet, getTempDirectory() & 'blogPosts.xls', true);
+    </cfscript>
+    ```
+
+1. Now that the spreadsheet has been created, you need to serve it up to the user. Use a `<cfheader>` tag and a `<cfcontent>` tag. First, start with the `<cfheader>` tag, which tells the browser to serve it up in line and what the filename should be. Place the following code after the closing `</cfscript>` tag:
+
+    ```cfml
+    <cfheader name="Content-Disposition" value="inline; filename=blogPosts.xls">
+    ```
+
+1. Finally, use the `<cfcontent>` tag, which tells what file needs to be served and what type of file it is.You can do this by using the following code, which should be placed right after the `<cfheader>` tag:
+
+    ```cfml
+    <cfcontent file="#getTempDirectory()#blogPosts.xls" type="vnd.ms-excel">
+    ```
+
+1. Your completed file should look similar to this:
+
+    ```cfml
+    <cfscript>
+        blogPosts = EntityLoad('blogPost');
+        exportSpreadsheet = SpreadsheetNew('Blog Posts');
+        SpreadsheetAddRow(exportSpreadsheet, 'ID,Title,Summary,Body,Date Posted');
+        SpreadsheetFormatRow(exportSpreadsheet, {bold=true,alignment='Center'}, 1);
+        for (blogPost in blogPosts){
+            SpreadsheetAddRow(exportSpreadsheet, '#blogPost.id#,#blogPost.title#,#blogPost.summary#,#blogPost.body#,#blogPost.datePosted#');
+        }
+        SpreadsheetWrite(exportSpreadsheet, getTempDirectory() & 'blogPosts.xls', true);
+    </cfscript>
+
+    <cfheader name="Content-Disposition" value="inline; filename=blogPosts.xls">
+    <cfcontent file="#getTempDirectory()#blogPosts.xls" type="vnd.ms-excel">
+    ```
+
+1. In a browser, navigate to the `/www/admin/content/blog/exportBlog.cfm` page. You might be prompted to download a file if the download does not start automatically. Open up the Excel file and review the data that has been exported.

@@ -1,103 +1,71 @@
 # Hands-On 21
 
-In this Hands-On we are going to secure our session and improve our admin security by hashing our passwords.
+In this Hands-On, we are going to add security to the blog comments. As this section allows users to supply data that will be stored in a database and will also be output to other users, this is a weakest point of the application.
 
-**Tags Used**: [\<cfif>](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-tags/tags-i/cfif.html), [\<cfset>](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-tags/tags-r-s/cfset.html), [\<cfquery>](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-tags/tags-p-q/cfquery.html), [\<cfqueryparam>](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-tags/tags-p-q/cfqueryparam.html)
+**Tags Used**: [\<cfif>](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-tags/tags-i/cfif.html), [\<cfset>](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-tags/tags-r-s/cfset.html), [\<cfthrow>](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-tags/tags-t/cfthrow.html)
 
-**Functions Used**: [len](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-functions/functions-l/len.html), [trim](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-functions/functions-t-z/trim.html), [Hash](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-functions/functions-h-im/hash.html), [GenerateSecretKey](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-functions/functions-e-g/generatesecretkey.html), [SessionRotate](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-functions/functions-s/sessionrotate.html), [SessionInvalidate](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-functions/functions-s/sessioninvalidate.html)
+**Functions Used**: [isSimpleValue](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-functions/functions-in-k/issimplevalue.html), [canonicalize](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-functions/functions-c-d/Canonicalize.html), [CSRFGenerateToken](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-functions/functions-c-d/CSRFGenerateToken.html), [CSRFverifyToken](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-functions/functions-c-d/CSRFVerifyToken.html), [encodeForHTML](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-functions/functions-e-g/encodeforhtml.html)
 
-1. Open up the `/www/Application.cfc` file in your code editor.
-1. When cookies are enabled on a web site (which is the case for this web site), it is important to secure them. Locate the block of variable declarations that sets values of the `this` scope. They should be at the top of the file.
-1. After the last variable declaration, add the following lines of code:
-
-    ```cfml
-    this.sessioncookie.httponly = true;
-    this.sessioncookie.timeout = "10";
-    this.sessioncookie.disableupdate = true;
-    ```
-
-1. Now that the session cookies are secured, improve the security of the admin area by updating the administrator passwords. Open up the `/www/admin/content/system/editadministrator.cfm` file in your code editor.
-1. Locate the line of code that checks if there were any validation errors on or around line 38.
-1. The first thing to do when implementing hashing into the admin is to check if a password has been submitted. If no password has been submitted when the record is being updated, then we do not plan on updating the password and do not need to hash anything. Create a `<cfif>` tag that checks if `form.password` has a length. Remember to trim the value just in case any errant spaces have been entered. Your code should look similar to this:
+1. Open up the `/www/blogpost.cfm` file in your code editor.
+1. The first thing we are going to do is add some checks to make sure the values in the form are all simple values. Locate the `<cfif>` statement that checks if the `form` has been submitted on or around line 3.
+1. Inside the `<cfif>`, prior to creating a new `blogcomment` entity, create a new `if` statement that checks if the `form.author` variable is a simple value. Your code should look similar to this:
 
     ```cfml
-    <cfif len(trim(form.password))>
+    <cfif isSimpleValue(form.author)>
 
     </cfif>
     ```
 
-1. Inside of the `<cfif>` tag, create two values: the first is the `salt` value we will be using and the other will be the hashed `password`. To create the `salt` value, create a `<cfset>` tag that creates a variable called salt. In the `<cfset>` tag call the `Hash()` function and pass in a call to the `GenerateSecretKey` function as the string to hash, and pass in `SHA-512` as the algorithm to use when hashing. In the `GenerateSecretKey` call, pass in `AES` as the algorithm to use. Your `<cfset>` should look similar to this:
+1. Once we know the value is a simple value, we need to call the `canonicalize()` method on the `form.author` value. To make things easier, assign the result of the `canonicalize()` call back to the `form.author` variable. The code will look similar to this:
 
     ```cfml
-    <cfset salt = Hash(GenerateSecretKey("AES"), "SHA-512")>
+    <cfset form.author = canonicalize(form.author, true, true)>
     ```
 
-1. Next, generate the hashed password. To do this, create another `<cfset>` tag that sets a variable called `password`. In the `<cfset>`, call the `Hash()` function again and pass it in a concatenated string of the `form.password` value and the `salt` value. Tell the `Hash()` function to use the `SHA-512` algorithm. Your `<cfset>` should look similar to this:
+1. Do the same for the remaining `comment` variable. Your final code should look similar to this:
 
     ```cfml
-    <cfset Password = Hash(form.password & salt, "SHA-512")>
+    <cfif isSimpleValue(form.author)>
+        <cfset form.author = canonicalize(form.author, true, true)>
+    </cfif>
+    <cfif isSimpleValue(form.comment)>
+        <cfset form.comment = canonicalize(form.comment, true, true)>
+    </cfif>
     ```
 
-1. Once there is a salt and a hashed password created, we need to update the queries to accept these values. Locate the `<cfquery>` tag that updates the administrator record on or around line 45. Update the SQL code so that the password value stored is the new password variable. Also, update the SQL so that the salt value is saved into a column called `salt`. The update query should look similar to this:
+1. Next, check if any of the values were not simple values. If one was not a simple value, it will throw an error. Create a `<cfif>` statement that checks if either are not simple values, and if one isn't, throw an error with the message `Validation Error`. Your code should look similar to this:
 
     ```cfml
-    <cfquery>
-        UPDATE
-            administrator
-        SET
-            firstname = <cfqueryparam value="#trim(form.firstname)#" cfsqltype="varchar">,
-            lastname = <cfqueryparam value="#trim(form.lastname)#" cfsqltype="varchar">,
-            emailaddress = <cfqueryparam value="#trim(form.emailaddress)#" cfsqltype="varchar">
-            <cfif len(trim(form.password))>
-                ,password = <cfqueryparam value="#password#" cfsqltype="varchar">
-                ,salt = <cfqueryparam value="#salt#" cfsqltype="varchar">
-            </cfif>
-        WHERE
-            id = <cfqueryparam value="#form.id#" cfsqltype="integer">
-    </cfquery>
+    <cfif not isSimpleValue(form.author) or not isSimpleValue(form.comment)>
+        <cfthrow message="Validation Error" >
+    </cfif>
     ```
 
-1. Once the update functionality is changed, it is time to change the insert functionality. Locate the `<cfquery>` that creates a new `administrator` and update the statement to use the new `password` variable. Also update the SQL to store the `salt` value. Your `<cfquery>` should look similar to this:
+1. Next, we will utilize ColdFusion's CSRF support by generating and validating a CSRF token. Locate the hidden field in the comment form on or around line 99.
+1. Create a new hidden field called `token`, and give it the value:
 
     ```cfml
-    <cfquery>
-        INSERT INTO
-            administrator (
-            firstname,
-            lastname,
-            emailaddress,
-            password,
-            salt
-        ) VALUES (
-            <cfqueryparam value="#trim(form.firstname)#" cfsqltype="varchar">,
-            <cfqueryparam value="#trim(form.lastname)#" cfsqltype="varchar">,
-            <cfqueryparam value="#trim(form.emailaddress)#" cfsqltype="varchar">,
-            <cfqueryparam value="#password#" cfsqltype="varchar">,
-            <cfqueryparam value="#salt#" cfsqltype="varchar">
-        )
-    </cfquery>
+    #CSRFGenerateToken()#
     ```
 
-1. Now that the newly encrypted password can be saved, we need to update the login logic to accommodate the changes that have been made. Before we do this, update the password for the current administrator. If we do not, as soon as the new logic is in place you will no longer be able to login to the admin. Open up `/www/admin/` in your browser.
-1. Login with the username: `system@yoursite.com` and password: `admin`.
-1. Navigate to: System > List Administrators.
-1. Edit the Administrator, provide a new password and click 'Save'. You have now updated your account with a newly hashed password.
-1. Now that the new password is created, we can update the login logic.
-1. Open up the `/www/admin/login.cfm` file in your code editor.
-1. Update the query that checks the `username` and `password`. Because we need to hash the password supplied with the applicable salt value, we can no longer search on the `password` value. Locate the `<cfquery>` tag with the name of `qLoginCheck` on or around line 10.
-1. Remove the part of the query that searches against the password and update the select list to return the `password` and `salt` columns.
-1. Locate the `<cfif>` statement that checks if any records were returned from the query, on or around line 22.
-1. Next, hash the password that was submitted by the form with the salt that was returned in the query. If that hashed value does not match what was returned by the query, then the password is incorrect. Update the `<cfif>` statement so it reads:
+1. Go to the top of the page and create a new `<cfparam>` tag for the `form.token` variable and default it to empty.
+1. Go back to the `<cfif>` statement on or around line 11 which checks if any of the `form` fields is not a simple value.
+1. Inside the `<cfif>` tag, check if the token value passed is a valid CSRF token. If the token is not valid, the same error will be thrown by the validation. Your final code should look similar to this:
 
     ```cfml
-    <cfif not qLoginCheck.recordcount or qLoginCheck.password neq Hash(form.password & qLoginCheck.salt, "SHA-512")>
+    <cfif not isSimpleValue(form.author) or not isSimpleValue(form.comment) or not CSRFVerifyToken(form.token)>
+        <cfthrow message="Validation Error" >
+    </cfif>
     ```
 
-1. The logic is now in place to check the submitted password with the hashed password. Before testing it out to make sure everything is working, we are going to add 2 more function calls to protect our session identifiers. Locate the `<cflocation>` tag on or around line 27.
-1. Before this tag make a call to `SessionRotate()` using a `<cfset>` tag. This will rotate the session identifiers every time we log in.
-1. Next, make sure the session is completely removed when we log out; open up the `/www/admin/logout.cfm` file in your code editor.
-1. Locate the `<cflocation>` tag on or around line 3.
-1. Before this tag, make a call to `SessionInvalidate()` using a `<cfset>` tag.
-1. Now that we have our hashed passwords set up and our session protection in place, it is time to test that everything is working. Log out by clicking on the `system@myWebsite.com` email address on the top right of the admin.
-1. Fill in the log in details for the administrator account you edited.
-1. Once logged in, click around the admin and then click log out. You have now successfully added security to our admin area.
+1. Now that all the data has been checked on input, we now need to validate the data on output. Locate where the comment body is output to the screen on or around line 75.
+1. Wrap the `#comment.comment#` output in an `encodeForHTML()` call so that the line of code looks similar to this:
+
+    ```cfml
+    #encodeForHTML(comment.comment)#
+    ```
+
+1. Make the same update for the `author` output on or around line 72.
+1. Open up `/www/blog.cfm` in your browser and navigate to a blog post.
+1. Confirm that the page loads successfully.
+1. Post a new comment and confirm that it still saves and outputs to the screen. Your blog now has additional security! Remember, even though it has security, it still not be considered 100% secure.
