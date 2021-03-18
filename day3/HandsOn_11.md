@@ -1,4 +1,4 @@
-# Hands-On 12
+# Hands-On 11
 
 In this Hands-On, let's create a function that will take a string and output a string of ASCII characters. Some people think that this will stop email addresses from being spidered. This may or may not be the case, but the logic for creating a function is still the same.
 

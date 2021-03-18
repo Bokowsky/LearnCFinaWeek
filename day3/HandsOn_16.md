@@ -1,4 +1,4 @@
-# Hands-On 17
+# Hands-On 16
 
 In this Hands-On we are going to create an encapsulated CFC that holds error data.
 

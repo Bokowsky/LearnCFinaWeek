@@ -1,4 +1,4 @@
-# Hands-On 15
+# Hands-On 14
 
 In this Hands-On, let's create a component where we will place the `convertStringToASCII` function and let us instantiate the component.
 

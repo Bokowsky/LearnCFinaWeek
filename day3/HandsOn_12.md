@@ -1,4 +1,4 @@
-# Hands-On 13
+# Hands-On 12
 
 In this Hands-On, we are going to separate out the header and footer and put the code into separate files that will be included.
 
