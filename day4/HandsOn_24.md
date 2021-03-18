@@ -2,27 +2,27 @@
 
 In this Hands-On we will change our locale and update the date and time outputs to change the display based on our locale.
 
-**Functions Used**: [LsdateFormat](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-functions/functions-l/lsdateformat.html), [LstimeFormat](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-functions/functions-l/lstimeformat.html), [setLocale](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-functions/functions-s/setlocale.html)
+**Functions Used**: [LSDateFormat](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-functions/functions-l/lsdateformat.html), [LSTimeFormat](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-functions/functions-l/lstimeformat.html), [setLocale](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-functions/functions-s/setlocale.html)
 
 1. To be able to change the date and time formats based on our locale, you need to update the functions used for date and time output. Open up the `/www/blogpost.cfm` file in your code editor.
 1. Locate the `blogPost.datePosted` variable output on or around line 52.
 1. Replace the `dateFormat` code with the following line of code:
 
     ```cfml
-    #LsdateFormat(blogPost.datePosted, 'short')#
+    #LSDateFormat(blogPost.datePosted, 'short')#
     ```
 
 1. Locate the `comment.createdDateTime` variable on or around line 72.
 1. Change the dateformat code with the following code:
 
     ```cfml
-    #LsdateFormat(comment.createdDateTime, 'short')#
+    #LSDateFormat(comment.createdDateTime, 'short')#
     ```
 
 1. Change the `timeFormat` code with the following code:
 
     ```cfml
-    #LstimeFormat(comment.createdDateTime, 'medium')#
+    #LSTimeFormat(comment.createdDateTime, 'medium')#
     ```
 
 1. Open up the `/www/blog.cfm` page in your browser.

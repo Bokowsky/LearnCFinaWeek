@@ -15,7 +15,7 @@ In this Hands-On, you are going to create an error and view the error informatio
     ```
 
 1. Open the `/www/throwError.cfm` page in your browser. You will see an error that states 'Variable FOO is undefined'.
-1. Notice that the error is displayed but with not much additional information. This is not helpful when developing a web site. Open up your ColdFusion administrator and log in. The URL for the ColdFusion Administrator is most likely [http://localhost:8500/CFIDE/administrator/](http://localhost:8500/CFIDE/administrator/).
+1. Notice that the error is displayed but with not much additional information. This is not helpful when developing a web site. Open up your ColdFusion administrator and log in. The URL for the ColdFusion Administrator is most likely <http://localhost:8500/CFIDE/administrator/>.
 1. Click on 'Debugging Output Settings' under 'Debugging and Logging'.
 1. Check the 'Enable Robust Exception Information' option and click 'Submit Changes'.
 1. Reload the `throwError.cfm` page in your browser. Notice that you now get the file name and line number the error is on.
