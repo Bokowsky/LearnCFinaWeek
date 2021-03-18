@@ -4,7 +4,7 @@
 <cfparam name="form.message" default="" />
 
 <cfset contactInfo = {address='123 A Street', phonenumber='(919) 555- 3228', email='simon@simonfree.com', skype='mySkypeName'} />
-<cfhttp url="http://www.learncfinaweek.com/twitter.xml" method="get" result="twitterFeed" />
+<cfhttp url="http://download.bokowsky.net/learncfinaweek/twitter.xml" method="get" result="twitterFeed" />
 <cfimport taglib="customTags/" prefix="layout" />
 <layout:page section="contact">
 <!-- Content Start -->
