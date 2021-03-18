@@ -16,7 +16,7 @@ In this Hands-On, we are going to refactor our code and take out any unnecessary
     <cfif form.submitted>
         <cfset ok = true>
 
-        <cfif not len(trim( form.contactname))>
+        <cfif not len(trim(form.contactname))>
             <cfset ok = false>
         </cfif>
 
@@ -24,7 +24,7 @@ In this Hands-On, we are going to refactor our code and take out any unnecessary
             <cfset ok = false>
         </cfif>
 
-        <cfif not len(trim( form.message))>
+        <cfif not len(trim(form.message))>
             <cfset ok = false>
         </cfif>
 

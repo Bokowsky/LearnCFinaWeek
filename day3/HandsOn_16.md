@@ -47,7 +47,7 @@ In this Hands-On we are going to create an encapsulated CFC that holds error dat
 
     ```cfml
     public boolean function hasErrors(){
-        if ( arrayLen( variables.errors ) ){
+        if (arrayLen(variables.errors)){
             return true;
         }
         else {

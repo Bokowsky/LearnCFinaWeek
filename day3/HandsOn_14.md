@@ -28,7 +28,7 @@ In this Hands-On, let's create a component where we will place the `convertStrin
             <cfargument name="stringToBeConverted" type="string" required="true">
             <cfset var convertedString = ''>
 
-            <cfloop from="1" to="#len( arguments.StringToBeConverted )#" index="i">
+            <cfloop from="1" to="#len(arguments.StringToBeConverted)#" index="i">
                 <cfset convertedString &= '&##' & asc(mid(arguments.StringTobeConverted, i, 1)) & ';'>
             </cfloop>
 

@@ -111,14 +111,14 @@ In this Hands-On, we are going to create a more complex query and output that to
 1. Go to the `myResume.startDate` output on or around line 123 and change it to read:
 
     ```cfml
-    #dateFormat( myResume.startDate, "mm/dd/yyyy" )#
+    #dateFormat(myResume.startDate, "mm/dd/yyyy")#
     ```
 
 1. Reload the `/www/resume.cfm` page in the browser and note that the start dates are now in a nice, readable format.
 1. Go to the `myResume.endDate` output on or around line 123 and make the same update. The code should read:
 
     ```cfml
-    #dateFormat( myResume.endDate, "mm/dd/yyyy" )#
+    #dateFormat(myResume.endDate, "mm/dd/yyyy")#
     ```
 
 1. Reload the `/www/resume.cfm` page in the browser. Notice that the date range does not show an end date for the Senior Developer position. This is because there is no end date in the database. Let's make that a bit more readable.
@@ -126,7 +126,7 @@ In this Hands-On, we are going to create a more complex query and output that to
 1. After the word "to" and before the start of the `dateformat` function, add the following code:
 
     ```cfml
-    <cfif len( myResume.endDate )>
+    <cfif len(myResume.endDate)>
     ```
 
 1. After the end of the `dateFormat` function, add the following code:
@@ -143,7 +143,7 @@ In this Hands-On, we are going to create a more complex query and output that to
         <cfoutput query="myResume" group="type">
             <h2>#type# <span>&nbsp; </span></h2>
             <cfoutput>
-                <h5>#myResume.title# <span>#dateFormat( myResume.startDate, "mm/dd/yyyy" )# to <cfif len( myResume.endDate )>#dateFormat( myResume.endDate, "mm/dd/yyyy" )#<cfelse>present</cfif> </span> </h5>
+                <h5>#myResume.title# <span>#dateFormat(myResume.startDate, "mm/dd/yyyy")# to <cfif len(myResume.endDate)>#dateFormat(myResume.endDate, "mm/dd/yyyy")#<cfelse>present</cfif> </span> </h5>
                 <p>#myResume.details#</p>
                 <!-- End Resume Listing -->
             </cfoutput>

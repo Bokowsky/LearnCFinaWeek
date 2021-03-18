@@ -13,7 +13,7 @@ In this Hands-On, you are going to validate the form data that was submitted and
     ```cfml
     <cfset ok = true>
 
-    <cfif len( form.contactname ) eq 0>
+    <cfif len(form.contactname) eq 0>
 
     </cfif>
     ```
@@ -24,7 +24,7 @@ In this Hands-On, you are going to validate the form data that was submitted and
     ```cfml
     <cfset ok = true >
 
-    <cfif len( form.contactname ) eq 0>
+    <cfif len(form.contactname) eq 0>
         <cfset ok = false>
     </cfif>
     ```

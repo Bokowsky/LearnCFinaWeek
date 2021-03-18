@@ -10,7 +10,7 @@ In this Hands-On, you are going to add an Error Handling solution to the web sit
 1. After the `onRequestStart` function, create a new function called `onError`. The function will accept 2 arguments. The first is of type `any` and is called `Exception`. The second is of type `string` and is called `EventName`. Your code should look similar to this:
 
     ```cfml
-    function onError( any Exception, string EventName ) {
+    function onError(any Exception, string EventName) {
 
     }
     ```
@@ -20,33 +20,33 @@ In this Hands-On, you are going to add an Error Handling solution to the web sit
 
     ```cfml
     var errorEmail = new mail();
-    errorEmail.setTo( 'you@domain.com' );
-    errorEmail.setFrom( 'system@domain.com' );
-    errorEmail.setSubject( 'An Error has Occured' );
+    errorEmail.setTo('you@domain.com');
+    errorEmail.setFrom('system@domain.com');
+    errorEmail.setSubject('An Error has Occured');
     errorEmail.setBody('
         Message: #arguments.exception.message# <br>
         Details: #arguments.exception.detail# <br>
         Type: #arguments.exception.type# <br>
     ');
-    errorEmail.setType( 'html' );
+    errorEmail.setType('html');
     errorEmail.send();
     ```
 
 1. Your function should look similar to this:
 
     ```cfml
-    function onError( any Exception, string EventName ) {
+    function onError(any Exception, string EventName) {
         include 'sorry.cfm';
         var errorEmail = new mail();
-        errorEmail.setTo( 'you@domain.com' );
-        errorEmail.setFrom( 'system@domain.com' );
-        errorEmail.setSubject( 'An Error has Occured' );
+        errorEmail.setTo('you@domain.com');
+        errorEmail.setFrom('system@domain.com');
+        errorEmail.setSubject('An Error has Occured');
         errorEmail.setBody('
             Message: #arguments.exception.message# <br>
             Details: #arguments.exception.detail# <br>
             Type: #arguments.exception.type# <br>
         ');
-        errorEmail.setType( 'html' );
+        errorEmail.setType('html');
         errorEmail.send();
 
     }

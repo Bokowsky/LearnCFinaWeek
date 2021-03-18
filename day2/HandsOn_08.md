@@ -20,7 +20,7 @@ In this Hands-On, we will create a more complex loop that uses an array of struc
 1. Once you have an empty array, you need to populate it with some data. Below the variable declaration, write the following line of code:
 
     ```cfml
-    arrayAppend( myPortfolio, { title='', website='', image='', description='' } );
+    arrayAppend(myPortfolio, { title='', website='', image='', description='' });
     ```
 
 1. Add this line 2 more times.
@@ -29,9 +29,9 @@ In this Hands-On, we will create a more complex loop that uses an array of struc
     ```cfml
     <cfscript>
         myPortfolio = [];
-        arrayAppend( myPortfolio, { title='Title 1', website='http://www.website1.com', image='portfolio1.png', description='Description 1' } );
-        arrayAppend( myPortfolio, { title='Title 2', website='http://www.website2.com', image='portfolio2.png', description='Description 2' } );
-        arrayAppend( myPortfolio, { title='Title 3', website='http://www.website3.com', image='portfolio3.png', description='Description 3' } );
+        arrayAppend(myPortfolio, { title='Title 1', website='http://www.website1.com', image='portfolio1.png', description='Description 1' });
+        arrayAppend(myPortfolio, { title='Title 2', website='http://www.website2.com', image='portfolio2.png', description='Description 2' });
+        arrayAppend(myPortfolio, { title='Title 3', website='http://www.website3.com', image='portfolio3.png', description='Description 3' });
     </cfscript>
     ```
 

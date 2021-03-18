@@ -21,7 +21,7 @@ In this Hands-On we are going to secure our session and improve our admin securi
 1. The first thing to do when implementing hashing into the admin is to check if a password has been submitted. If no password has been submitted when the record is being updated, then we do not plan on updating the password and do not need to hash anything. Create a `<cfif>` tag that checks if `form.password` has a length. Remember to trim the value just in case any errant spaces have been entered. Your code should look similar to this:
 
     ```cfml
-    <cfif len( trim( form.password ) )>
+    <cfif len(trim(form.password))>
 
     </cfif>
     ```
@@ -29,13 +29,13 @@ In this Hands-On we are going to secure our session and improve our admin securi
 1. Inside of the `<cfif>` tag, create two values: the first is the `salt` value we will be using and the other will be the hashed `password`. To create the `salt` value, create a `<cfset>` tag that creates a variable called salt. In the `<cfset>` tag call the `Hash()` function and pass in a call to the `GenerateSecretKey` function as the string to hash, and pass in `SHA-512` as the algorithm to use when hashing. In the `GenerateSecretKey` call, pass in `AES` as the algorithm to use. Your `<cfset>` should look similar to this:
 
     ```cfml
-    <cfset salt = Hash( GenerateSecretKey( "AES" ), "SHA-512" )>
+    <cfset salt = Hash(GenerateSecretKey("AES"), "SHA-512")>
     ```
 
 1. Next, generate the hashed password. To do this, create another `<cfset>` tag that sets a variable called `password`. In the `<cfset>`, call the `Hash()` function again and pass it in a concatenated string of the `form.password` value and the `salt` value. Tell the `Hash()` function to use the `SHA-512` algorithm. Your `<cfset>` should look similar to this:
 
     ```cfml
-    <cfset Password = Hash( form.password & salt, "SHA-512" )>
+    <cfset Password = Hash(form.password & salt, "SHA-512")>
     ```
 
 1. Once there is a salt and a hashed password created, we need to update the queries to accept these values. Locate the `<cfquery>` tag that updates the administrator record on or around line 45. Update the SQL code so that the password value stored is the new password variable. Also, update the SQL so that the salt value is saved into a column called `salt`. The update query should look similar to this:
@@ -45,10 +45,10 @@ In this Hands-On we are going to secure our session and improve our admin securi
         UPDATE
             administrator
         SET
-            firstname = <cfqueryparam value="#trim( form.firstname )#" cfsqltype="varchar">,
-            lastname = <cfqueryparam value="#trim( form.lastname )#" cfsqltype="varchar">,
-            emailaddress = <cfqueryparam value="#trim( form.emailaddress )#" cfsqltype="varchar">
-            <cfif len( trim( form.password ) )>
+            firstname = <cfqueryparam value="#trim(form.firstname)#" cfsqltype="varchar">,
+            lastname = <cfqueryparam value="#trim(form.lastname)#" cfsqltype="varchar">,
+            emailaddress = <cfqueryparam value="#trim(form.emailaddress)#" cfsqltype="varchar">
+            <cfif len(trim(form.password))>
                 ,password = <cfqueryparam value="#password#" cfsqltype="varchar">
                 ,salt = <cfqueryparam value="#salt#" cfsqltype="varchar">
             </cfif>
@@ -69,9 +69,9 @@ In this Hands-On we are going to secure our session and improve our admin securi
             password,
             salt
         ) VALUES (
-            <cfqueryparam value="#trim( form.firstname )#" cfsqltype="varchar">,
-            <cfqueryparam value="#trim( form.lastname )#" cfsqltype="varchar">,
-            <cfqueryparam value="#trim( form.emailaddress )#" cfsqltype="varchar">,
+            <cfqueryparam value="#trim(form.firstname)#" cfsqltype="varchar">,
+            <cfqueryparam value="#trim(form.lastname)#" cfsqltype="varchar">,
+            <cfqueryparam value="#trim(form.emailaddress)#" cfsqltype="varchar">,
             <cfqueryparam value="#password#" cfsqltype="varchar">,
             <cfqueryparam value="#salt#" cfsqltype="varchar">
         )
@@ -90,7 +90,7 @@ In this Hands-On we are going to secure our session and improve our admin securi
 1. Next, hash the password that was submitted by the form with the salt that was returned in the query. If that hashed value does not match what was returned by the query, then the password is incorrect. Update the `<cfif>` statement so it reads:
 
     ```cfml
-    <cfif !qLoginCheck.recordcount || qLoginCheck.password NEQ Hash( form.password & qLoginCheck.salt, "SHA-512" )>
+    <cfif not qLoginCheck.recordcount or qLoginCheck.password neq Hash(form.password & qLoginCheck.salt, "SHA-512")>
     ```
 
 1. The logic is now in place to check the submitted password with the hashed password. Before testing it out to make sure everything is working, we are going to add 2 more function calls to protect our session identifiers. Locate the `<cflocation>` tag on or around line 27.
