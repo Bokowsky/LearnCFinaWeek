@@ -14,7 +14,9 @@ In this Hands-On, we are going to import and export data into the blog section u
     * **nameconflict**: makeunique
 1. Your code should look similar to this:
 
+   ```cfml
     <cffile action="upload" destination="#getTempDirectory()#" filefield="importFile" nameconflict="makeunique">
+   ```
 
 1. Once the file is on the server, we can parse the file and put it into a query variable by using the `<cfspreadsheet>` tag. Locate the `Read Spreadsheet` comment and create a `<cfspreadsheet>` tag on the line below with the following attributes:
     * **action**: read
@@ -35,7 +37,7 @@ In this Hands-On, we are going to import and export data into the blog section u
 
     ```cfml
     <cfloop query="importData">
-        <cfset blogPost = EntityNew( 'blogPost' )>
+        <cfset blogPost = EntityNew('blogPost')>
         <cfset blogPost.title = importData.title>
         <cfset blogPost.summary = importData.summary>
         <cfset blogPost.body = importData.body>
@@ -55,7 +57,7 @@ In this Hands-On, we are going to import and export data into the blog section u
 
     <!--- Import Data --->
     <cfloop query="importData">
-        <cfset blogPost = EntityNew( 'blogPost' )>
+        <cfset blogPost = EntityNew('blogPost')>
         <cfset blogPost.title = importData.title>
         <cfset blogPost.summary = importData.summary>
         <cfset blogPost.body = importData.body>
@@ -77,49 +79,49 @@ In this Hands-On, we are going to import and export data into the blog section u
 
     ```cfml
     <cfscript>
-        blogPosts = EntityLoad( 'blogPost' );
-        exportSpreadsheet = SpreadsheetNew( 'Blog Posts' );
+        blogPosts = EntityLoad('blogPost');
+        exportSpreadsheet = SpreadsheetNew('Blog Posts');
     </cfscript>
     ```
 
 1. Once you have the spreadsheet object created, add a heading row. To do this, call the `SpreadsheetAddRow` function and pass it in the `exportSpreadhseet` object with a comma delimited string of the column headings you want. For this example, the code will look similar to:
 
     ```cfml
-    SpreadsheetAddRow( exportSpreadsheet, 'ID,Title,Summary,Body,Date Posted' );
+    SpreadsheetAddRow(exportSpreadsheet, 'ID,Title,Summary,Body,Date Posted');
     ```
 
 1. As this row is a header row, you will want to add some styles to denote that. Using the `SpreadsheetFormatRow` function, format the first row so it is Bold and aligned center. To do this, place the following code below the `SpreadsheetAddRow` call:
 
     ```cfml
-    SpreadsheetFormatRow( exportSpreadsheet, {bold=true,alignment='Center'}, 1 );
+    SpreadsheetFormatRow(exportSpreadsheet, {bold=true,alignment='Center'}, 1);
     ```
 
 1. Once the header is formatted, add the remaining data to the spreadsheet. Loop over the query and call `SpreadsheetAddRow` on each iteration and pass in the `spreadsheetObject`, in this case `exportSpreadsheet`, and a list of data. The code should look like this:
 
     ```cfml
-    for ( blogPost in blogPosts ){
-        SpreadsheetAddRow( exportSpreadsheet, '#blogPost.id#,#blogPost.title#,#blogPost.summary#,#blogPost.body#,#blogPost.datePosted#' );
+    for (blogPost in blogPosts){
+        SpreadsheetAddRow(exportSpreadsheet, '#blogPost.id#,#blogPost.title#,#blogPost.summary#,#blogPost.body#,#blogPost.datePosted#');
     }
     ```
 
 1. Now that all the data is in the spreadsheet, save the spreadsheet to the server. To do that, call the `spreadsheetWrite` function and pass it in the `spreadsheetObject`, which is the path of the file we want it to be written to, and you can choose to overwrite the file that might already be there. In this case, write the file to the servers temp directory and have it overwrite any file that might already exist with the same name by using the following code:
 
     ```cfml
-    SpreadsheetWrite( exportSpreadsheet, getTempDirectory() & 'blogPosts.xls', true );
+    SpreadsheetWrite(exportSpreadsheet, getTempDirectory() & 'blogPosts.xls', true);
     ```
 
-1. Our completed `<cfscript\>` block should look similar to this:
+1. Our completed `<cfscript>` block should look similar to this:
 
     ```cfml
     <cfscript>
-        blogPosts = EntityLoad( 'blogPost' );
-        exportSpreadsheet = SpreadsheetNew( 'Blog Posts' );
-        SpreadsheetAddRow( exportSpreadsheet, 'ID,Title,Summary,Body,Date Posted' );
-        SpreadsheetFormatRow( exportSpreadsheet, {bold=true,alignment='Center'}, 1 );
-        for ( blogPost in blogPosts ){
-            SpreadsheetAddRow( exportSpreadsheet, '#blogPost.id#,#blogPost.title#,#blogPost.summary#,#blogPost.body#,#blogPost.datePosted#' );
+        blogPosts = EntityLoad('blogPost');
+        exportSpreadsheet = SpreadsheetNew('Blog Posts');
+        SpreadsheetAddRow(exportSpreadsheet, 'ID,Title,Summary,Body,Date Posted');
+        SpreadsheetFormatRow(exportSpreadsheet, {bold=true,alignment='Center'}, 1);
+        for (blogPost in blogPosts){
+            SpreadsheetAddRow(exportSpreadsheet, '#blogPost.id#,#blogPost.title#,#blogPost.summary#,#blogPost.body#,#blogPost.datePosted#');
         }
-        SpreadsheetWrite( exportSpreadsheet, getTempDirectory() & 'blogPosts.xls', true );
+        SpreadsheetWrite(exportSpreadsheet, getTempDirectory() & 'blogPosts.xls', true);
     </cfscript>
     ```
 
@@ -139,14 +141,14 @@ In this Hands-On, we are going to import and export data into the blog section u
 
     ```cfml
     <cfscript>
-        blogPosts = EntityLoad( 'blogPost' );
-        exportSpreadsheet = SpreadsheetNew( 'Blog Posts' );
-        SpreadsheetAddRow( exportSpreadsheet, 'ID,Title,Summary,Body,Date Posted' );
-        SpreadsheetFormatRow( exportSpreadsheet, {bold=true,alignment='Center'}, 1 );
-        for ( blogPost in blogPosts ){
-            SpreadsheetAddRow( exportSpreadsheet, '#blogPost.id#,#blogPost.title#,#blogPost.summary#,#blogPost.body#,#blogPost.datePosted#' );
+        blogPosts = EntityLoad('blogPost');
+        exportSpreadsheet = SpreadsheetNew('Blog Posts');
+        SpreadsheetAddRow(exportSpreadsheet, 'ID,Title,Summary,Body,Date Posted');
+        SpreadsheetFormatRow(exportSpreadsheet, {bold=true,alignment='Center'}, 1);
+        for (blogPost in blogPosts){
+            SpreadsheetAddRow(exportSpreadsheet, '#blogPost.id#,#blogPost.title#,#blogPost.summary#,#blogPost.body#,#blogPost.datePosted#');
         }
-        SpreadsheetWrite( exportSpreadsheet, getTempDirectory() & 'blogPosts.xls', true );
+        SpreadsheetWrite(exportSpreadsheet, getTempDirectory() & 'blogPosts.xls', true);
     </cfscript>
 
     <cfheader name="Content-Disposition" value="inline; filename=blogPosts.xls">
