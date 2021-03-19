@@ -63,7 +63,7 @@
 					<cfqueryparam value="#trim(form.summary)#" cfsqltype="cf_sql_varchar" />,
 					<cfqueryparam value="#trim(form.website)#" cfsqltype="cf_sql_varchar" />
 					<cfif len(form.image)>
-						<cfqueryparam value="#trim(form.image)#" cfsqltype="cf_sql_varchar" />
+						, <cfqueryparam value="#trim(form.image)#" cfsqltype="cf_sql_varchar" />
 					</cfif>	
 				)
 			</cfquery>
