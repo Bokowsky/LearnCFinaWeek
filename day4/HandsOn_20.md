@@ -2,6 +2,33 @@
 
 In this Hands-On, we are going to import and export data into the blog section using Excel.
 
+> **Note**: If you haven't used the provided solution projects yet, you won't be able to continue with the Hands-Ons unless you do the following:
+> 1. Locate the `this.sessionTimeout` variable declaration in your `/www/Application.cfc`. Below it, paste this:
+>
+>  ```cfml
+>  this.ormEnabled=true;
+>  this.ormSettings={
+>     logsql=true,
+>     dbcreate="update",
+>     cfclocation="com/entity"
+>  };
+>  this.invokeImplicitAccessor=true;
+>  ```
+>
+> 2. Go to the `onRequestStart` Function and add an `ormReload()` function call inside the if statement. The function should now look like this:
+>
+>  ```cfml
+>  function onRequestStart(string targetPage){
+>     if(structKeyExists(url, 'reload')){
+>        onApplicationStart();
+>        ormReload();
+>     }
+>  }
+>  ```
+> 
+> 3. Copy the files from [_catch-up-files](_catch-up-files/) to your `/www` directory.
+> 4. Open the `/www/index.cfm` file with the "reload" URL parameter in your browser to reload the application.
+
 **Tags Used**: [\<cffile>](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-tags/tags-f/cffile.html), [\<cfspreadsheet>](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-tags/tags-r-s/cfspreadsheet.html), [\<cfloop>](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-tags/tags-j-l/cfloop.html), [\<cfset>](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-tags/tags-r-s/cfset.html), [\<cfscript>](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-tags/tags-r-s/cfscript.html), [\<cfheader>](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-tags/tags-g-h/cfheader.html), [\<cfcontent>](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-tags/tags-c/cfcontent.html)
 
 **Functions Used**: [getTempDirectory](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-functions/functions-e-g/gettempdirectory.html), [EntityNew](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-functions/functions-e-g/entitynew.html), [EntitySave](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-functions/functions-e-g/entitysave.html), [ormFlush](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-functions/functions-m-r/ormflush.html), [EntityLoad](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-functions/functions-e-g/entityload.html), [spreadsheetNew](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-functions/functions-s/spreadsheetnew.html), [spreadsheetAddRow](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-functions/functions-s/spreadsheetaddrow.html), [spreadsheetFormatRow](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-functions/functions-s/spreadsheetformatrow.html), [spreadsheetAddRows](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-functions/functions-s/spreadsheetaddrows.html), [spreadsheetWrite](https://helpx.adobe.com/coldfusion/cfml-reference/coldfusion-functions/functions-s/spreadsheetwrite.html)
